@@ -9,3 +9,5 @@ Users started to use the bank, `Ahmed` has put `1 ETH` on the bank, after he cre
 Ahmed contacted Bank Support and Bank Supports gets a lot of issues like this.
 
 You need to know what is the problem that allows anyone to withdraw, and how anyone can see the passwords and information of other accounts.
+
+> SOLVED

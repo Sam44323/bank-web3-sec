@@ -41,6 +41,9 @@ contract BankV1Test is Test {
 
         vm.startPrank(attacker);
         bytes32 slot = keccak256(abi.encode(ahmed, uint256(1)));
+
+        // log the value at the computed slot
+        
         bytes32 value = vm.load(address(bank), slot);
 
         bank.withdrawEther(ahmed, uint256(value), 1 ether, attacker);

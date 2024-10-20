@@ -3,14 +3,14 @@ pragma solidity ^0.8.0;
 
 contract BankV1 {
     mapping(address account => bool activated) private activatedAccounts;
-    mapping(address account => uint256 password) private accountsPasswords;
+    mapping(address account => bytes32 password) private accountsPasswords;
     mapping(address account => uint256 balance) private accountsBalances;
 
     /// @notice Create new Account in the Bank
     /// @param password Account password that will be used in authentication when withdrawing
     function createAccount(uint256 password) external {
         activatedAccounts[msg.sender] = true;
-        accountsPasswords[msg.sender] = password;
+        accountsPasswords[msg.sender] = keccak256(abi.encode(password));
     }
 
     /// @notice adding provided account balance by the value of sent Ether
@@ -30,8 +30,13 @@ contract BankV1 {
     /// @param amount The amount to withdraw
     /// @param recipent The receiver of ether
     function withdrawEther(address account, uint256 password, uint256 amount, address recipent) external {
+
+        // convert the password to keccak hash and compare it with the stored hash
+
+        bytes32 hashedPassword = keccak256(abi.encode(password));
+
         require(activatedAccounts[account], "Account is not activated yet");
-        require(accountsPasswords[account] == password, "Account is not activated yet");
+        require(accountsPasswords[account] == hashedPassword, "Account is not activated yet");
         require(accountsBalances[account] >= amount, "Amount to withdraw exceeds balance");
 
         accountsBalances[account] -= amount;
