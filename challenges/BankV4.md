@@ -11,3 +11,5 @@ Bank developers Blacklisted that user immediately after the call, and prevented 
 The Developers meet with Officials to plan to take that stolen money back and give it to that Entity to return it. But in the meeting when they decided to take that user's money, they noticed that the user was able to withdraw his money, not only this, but he is also not a `BlackListed` user anymore.
 
 You need to know what is the problem that makes the Attacker being able to withdraw his balance although it gets blacklisted by developers.
+
+> Solved (access-role-override)

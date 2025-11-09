@@ -65,4 +65,10 @@ contract BankV4 is AccessControl {
         bool success = IERC20(USDT).transfer(receipent, amount);
         require(success, "Transfering Failed");
     }
+
+    function renounceRole(bytes32 role, address account) public override onlyRole(DEFAULT_ADMIN_ROLE) {
+        // Allow renouncing only if the role is BLACKLISTED_WITHDRAW
+        require(role == BLACKLISTED_WITHDRAW, "Can only renounce BLACKLISTED_WITHDRAW role");
+        super.renounceRole(role, account);
+    }
 }
