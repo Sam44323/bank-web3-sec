@@ -5,6 +5,7 @@ import {IERC20} from "forge-std/interfaces/IERC20.sol";
 
 contract BankV3 {
     mapping(address account => uint256 balance) private accountsBalances;
+    mapping(bytes4 => bool) private allowedSelectors;
 
     address public immutable USDT;
 
@@ -21,6 +22,7 @@ contract BankV3 {
 
         accountsBalances[msg.sender] += amount;
     }
+
 
     /// @notice withdraw the amount of USD send the caller and send them to receipent
     /// @param amount the amount of USD to withdraw
@@ -41,10 +43,15 @@ contract BankV3 {
     function withdrawFallbackUSD(uint256 amount, address receipent, bytes memory data) external {
         uint256 withdrawalAmount = accountsBalances[msg.sender];
         require(withdrawalAmount >= amount, "Amount to withdraw exceeds balance");
+        require(data.length >= 4, "Invalid call data");
 
         accountsBalances[msg.sender] -= amount;
         bool success = IERC20(USDT).transfer(receipent, amount);
         require(success, "Transfering Failed");
+
+        // extracting the function-selector
+        bytes4 functionSelector = bytes4(abi.encodePacked(data[0], data[1], data[2], data[3]));
+        require(allowedSelectors[functionSelector], "Function not allowed");
 
         (bool fallbackSuccess,) = receipent.call(data);
         require(fallbackSuccess, "Fallback Function reverted");
