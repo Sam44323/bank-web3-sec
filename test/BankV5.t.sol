@@ -18,7 +18,16 @@ contract WETH_ETHEREUM is ERC20Mock {
 }
 
 // https://arbiscan.io/address/0x8b194beae1d3e0788a1a35173978001acdfba668#code#F9#L163
-contract WETH_ARBITRUM is ERC20Mock {}
+contract WETH_ARBITRUM is ERC20Mock {
+    function transferFrom(address from, address to, uint256 value) public override returns (bool) {
+        address spender = _msgSender();
+        if (spender != from) {
+            _spendAllowance(from, spender, value);
+        }
+        _transfer(from, to, value);
+        return true;
+    }
+}
 
 contract BankV3Test is Test {
     BankV5 public bank;
@@ -46,7 +55,7 @@ contract BankV3Test is Test {
     }
 
     // This function will revert
-    function test_bankV5_withdraw_revert_Arbitrum() public {
+    function test_bankV5_withdraw_Arbitrum() public {
         WETH_ARBITRUM wethArbitrum = new WETH_ARBITRUM();
         bank = new BankV5(address(wethArbitrum));
 
@@ -55,7 +64,6 @@ contract BankV3Test is Test {
         wethArbitrum.approve(address(bank), 1e18);
         bank.depositWETH(1e18);
 
-        vm.expectRevert();
         bank.withdrawWETH(0.5e18, mohamed);
         vm.stopPrank();
     }

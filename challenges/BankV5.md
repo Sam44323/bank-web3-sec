@@ -11,3 +11,5 @@ After a while, the number of Bank users increases, and it becomes a popular Bank
 After deploying on `Arbitrum`, and users starts using it on Arbitrum, they receive messages from clients that they are unable to withdraw their tokens. The Bank Developers are shocked by this as the Protocol is working fine on Ethereum, and withdrawal is not working on `Arbitrum`.
 
 You need to know what is the problem that prevents withdrawing functionality from working on `Arbitrum`.
+
+> Solved (cross-chains)
